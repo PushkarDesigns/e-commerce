@@ -3,9 +3,10 @@ import Home from "./pages/Home";
 import Products from "./pages/Products";
 import ProductDetails from "./pages/ProductDetails";
 import Cart from "./pages/Cart";
+import MyOrders from "./pages/MyOrders";
 import Navbar from "./components/Navbar";
 // import { useContext } from "react";
-import { AppContext } from "./context/AppContext";
+// import { AppContext } from "./context/AppContext";
 
 const App = () => {
   // const { setIsSeller } = useContext(AppContext);
@@ -18,6 +19,7 @@ const App = () => {
         <Route path="/products" element={<Products />} />
         <Route path="/product/:id" element={<ProductDetails />} />
         <Route path="/cart" element={<Cart />} />
+        <Route path="/my-orders" element={<MyOrders />} />
       </Routes>
     </div>
   );

@@ -17,7 +17,7 @@ const AppContextProvider = ({ children }) => {
         isSeller,
         setIsSeller,
         showUserLogin,
-        setShowUserLogin
+        setShowUserLogin,
     };
 
     return (
