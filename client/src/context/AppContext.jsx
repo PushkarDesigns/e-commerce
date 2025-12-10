@@ -21,9 +21,11 @@ const AppContextProvider = ({ children }) => {
     };
 
     return (
+        <>
         <AppContext.Provider value={value}>
             {children}
         </AppContext.Provider>
+        </>
     );
 };
 

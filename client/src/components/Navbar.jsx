@@ -6,7 +6,7 @@ import { assets } from "../assets/assets.js"
 const Navbar = () => {
 
   const [open, setOpen] = useState(false);
-  const { user, setUser, navigate } = useContext(AppContext);
+  const { user, setUser, navigate, setShowUserLogin } = useContext(AppContext);
 
   return (
     <nav className="flex items-center justify-between px-6 md:px-16 lg:px-24 xl:px-32 py-4 border-b border-gray-300 bg-white relative transition-all">
@@ -59,7 +59,7 @@ const Navbar = () => {
               </ul>
             </div>
           </>
-        ) : <button className="cursor-pointer px-8 py-2 bg-indigo-500 hover:bg-indigo-600 transition text-white rounded-full"> Login </button>}
+        ) : (<button className="cursor-pointer px-8 py-2 bg-indigo-500 hover:bg-indigo-600 transition text-white rounded-full" onClick={()=>setShowUserLogin(true)}> Login </button>)}
       </div>
 
       <button onClick={() => open ? setOpen(false) : setOpen(true)} aria-label="Menu" className="sm:hidden">
