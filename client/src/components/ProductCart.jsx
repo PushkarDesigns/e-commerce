@@ -4,7 +4,7 @@ import { assets } from "../assets/assets";
 
 const ProductCard = ({ product }) => {
     const [count, setCount] = useState(0);
-    const { navigate } = useContext(AppContext);
+    const { navigate, addToCart, cartItems, removeFromCart } = useContext(AppContext);
 
     return (
         <>
@@ -59,7 +59,7 @@ const ProductCard = ({ product }) => {
 
                             {/* Add / Counter */}
                             <div onClick={(e) => e.stopPropagation()}>
-                                {count === 0 ? (
+                                {!cartItems[product._id] ? (
                                     <button
                                         onClick={() => setCount(1)}
                                         className="bg-indigo-100 hover:bg-indigo-200 text-indigo-600 border border-indigo-300 
