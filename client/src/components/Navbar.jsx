@@ -118,7 +118,7 @@ import { assets } from "../assets/assets.js";
 
 const Navbar = () => {
   const [open, setOpen] = useState(false);
-  const { user, setUser, navigate, setShowUserLogin } = useContext(AppContext);
+  const { user, setUser, navigate, setShowUserLogin, cartCount } = useContext(AppContext);
 
   return (
     <nav className="w-full bg-white border-b border-gray-200 shadow-sm px-6 md:px-16 lg:px-24 xl:px-32 py-4 flex justify-between items-center sticky top-0 z-40">
@@ -153,7 +153,7 @@ const Navbar = () => {
         >
           <img src={assets.cart_icon} className="w-7" />
           <span className="absolute -top-2 -right-3 bg-primary text-white text-[10px] w-5 h-5 rounded-full flex items-center justify-center font-semibold shadow-md">
-            3
+            {cartCount()}
           </span>
         </div>
 

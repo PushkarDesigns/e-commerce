@@ -1,9 +1,8 @@
-import { useContext, useState } from "react";
+import { useContext } from "react";
 import { AppContext } from "../context/AppContext";
 import { assets } from "../assets/assets";
 
 const ProductCard = ({ product }) => {
-    const [count, setCount] = useState(0);
     const { navigate, addToCart, cartItems, removeFromCart } = useContext(AppContext);
 
     return (
@@ -61,7 +60,7 @@ const ProductCard = ({ product }) => {
                             <div onClick={(e) => e.stopPropagation()}>
                                 {!cartItems[product._id] ? (
                                     <button
-                                        onClick={() => setCount(1)}
+                                        onClick={() => addToCart(product._id)}
                                         className="bg-indigo-100 hover:bg-indigo-200 text-indigo-600 border border-indigo-300 
                                         rounded-md py-1 px-4 flex items-center gap-2 transition"
                                     >
@@ -84,14 +83,14 @@ const ProductCard = ({ product }) => {
                                 ) : (
                                     <div className="bg-indigo-500/20 flex items-center gap-2 px-3 py-1 rounded-md select-none">
                                         <button
-                                            onClick={() => setCount((prev) => Math.max(prev - 1, 0))}
+                                            onClick={() => removeFromCart(product._id)}
                                             className="text-lg font-medium"
                                         >
                                             -
                                         </button>
-                                        <span className="w-5 text-center">{count}</span>
+                                        <span className="w-5 text-center">{cartItems[product._id]}</span>
                                         <button
-                                            onClick={() => setCount((prev) => prev + 1)}
+                                            onClick={() => addToCart(product._id)}
                                             className="text-lg font-medium"
                                         >
                                             +
