@@ -13,6 +13,7 @@ const AppContextProvider = ({ children }) => {
   const [showUserLogin, setShowUserLogin] = useState(false);
   const [products, setProducts] = useState(dummyProducts);
   const [cartItems, setCartItems] = useState({});
+  const [SearchQuery, setSearchQuery] = useState({});
 
   // add product to cart
   const addToCart = (itemId) => {
@@ -84,6 +85,8 @@ const AppContextProvider = ({ children }) => {
     totalCartAmount,
     removeFromCart,
     cartItems,
+    SearchQuery,
+    setSearchQuery,
   };
 
   return (
