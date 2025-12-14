@@ -20,7 +20,7 @@
 //         <Link to="/products">All Products</Link>
 
 //         <div className="hidden lg:flex items-center text-sm gap-2 border border-gray-300 px-3 rounded-full">
-//           <input className="py-1.5 w-full bg-transparent outline-none placeholder-gray-500" type="text" placeholder="Search products" />
+//           <input className="py-1.5 w-full bg-transparent outline-none placeholder-gray-500" type="text" placeholder="Search products" onChange={(e) => setSearchQuery(e.target.value)}/>
 //           <svg width="16" height="16" viewBox="0 0 16 16" fill="none" xmlns="http://www.w3.org/2000/svg">
 //             <path d="M10.836 10.615 15 14.695" stroke="#7A7B7D" stroke-width="1.2" stroke-linecap="round" stroke-linejoin="round" />
 //             <path clip-rule="evenodd" d="M9.141 11.738c2.729-1.136 4.001-4.224 2.841-6.898S7.67.921 4.942 2.057C2.211 3.193.94 6.281 2.1 8.955s4.312 3.92 7.041 2.783" stroke="#7A7B7D" stroke-width="1.2" stroke-linecap="round" stroke-linejoin="round" />
@@ -111,14 +111,19 @@
 
 // export default Navbar
 
-import { useContext, useState } from "react";
+import { useContext, useEffect, useState } from "react";
 import { Link } from "react-router-dom";
 import { AppContext } from "../context/AppContext";
 import { assets } from "../assets/assets.js";
 
 const Navbar = () => {
   const [open, setOpen] = useState(false);
-  const { user, setUser, navigate, setShowUserLogin, cartCount } = useContext(AppContext);
+  const { user, setUser, navigate, setShowUserLogin, cartCount, searchQuery, setSearchQuery } = useContext(AppContext);
+  useEffect(() => {
+    if (searchQuery && searchQuery.length > 0) {
+      navigate("/products");
+    }
+  }, [searchQuery]);
 
   return (
     <nav className="w-full bg-white border-b border-gray-200 shadow-sm px-6 md:px-16 lg:px-24 xl:px-32 py-4 flex justify-between items-center sticky top-0 z-40">
@@ -138,17 +143,17 @@ const Navbar = () => {
 
         {/* Search Bar */}
         <div className="hidden lg:flex items-center gap-2 px-4 py-1.5 border border-gray-300 rounded-full bg-gray-50">
-          <input 
-            type="text" 
+          <input
+            type="text"
             className="bg-transparent outline-none text-sm w-40 placeholder-gray-500"
-            placeholder="Search products..."
+            placeholder="Search products..." onChange={(e) => setSearchQuery(e.target.value)}
           />
           <img src={assets.search_icon} alt="" className="w-4 opacity-70" />
         </div>
 
         {/* Cart */}
-        <div 
-          className="relative cursor-pointer group" 
+        <div
+          className="relative cursor-pointer group"
           onClick={() => navigate("/cart")}
         >
           <img src={assets.cart_icon} className="w-7" />
@@ -160,22 +165,22 @@ const Navbar = () => {
         {/* Profile / Login */}
         {user ? (
           <div className="relative group">
-            <img 
+            <img
               src={assets.profile_icon}
               className="w-11 h-11 rounded-full border border-gray-300 shadow cursor-pointer hover:scale-105 transition"
             />
 
             {/* Dropdown */}
             <ul className="absolute right-0 mt-3 bg-white w-48 shadow-xl border border-gray-200 rounded-xl py-3 opacity-0 invisible group-hover:opacity-100 group-hover:visible transition-all duration-200 transform translate-y-2 group-hover:translate-y-0">
-              <li 
-                onClick={() => navigate("/my-orders")} 
+              <li
+                onClick={() => navigate("/my-orders")}
                 className="px-4 py-2 hover:bg-gray-100 cursor-pointer flex items-center gap-2 text-sm"
               >
                 <img src={assets.order_icon} className="w-4" /> My Orders
               </li>
 
-              <li 
-                onClick={() => setUser(null)} 
+              <li
+                onClick={() => setUser(null)}
                 className="px-4 py-2 hover:bg-red-100 cursor-pointer flex items-center gap-2 text-sm text-red-600"
               >
                 <img src={assets.logout_icon} className="w-4" /> Logout
@@ -183,7 +188,7 @@ const Navbar = () => {
             </ul>
           </div>
         ) : (
-          <button 
+          <button
             onClick={() => setShowUserLogin(true)}
             className="px-6 py-2 rounded-full bg-primary hover:bg-primary/80 text-white shadow-md transition font-medium"
           >
@@ -193,8 +198,8 @@ const Navbar = () => {
       </div>
 
       {/* Mobile Menu Button */}
-      <button 
-        onClick={() => setOpen(!open)} 
+      <button
+        onClick={() => setOpen(!open)}
         className="sm:hidden"
       >
         <svg width="22" height="16" fill="none">
@@ -210,7 +215,7 @@ const Navbar = () => {
         <Link to="/" className="hover:text-primary transition">Home</Link>
         <Link to="/products" className="hover:text-primary transition">All Products</Link>
 
-        <div 
+        <div
           className="flex items-center gap-3 cursor-pointer"
           onClick={() => navigate("/cart")}
         >
@@ -220,14 +225,14 @@ const Navbar = () => {
 
         {user ? (
           <>
-            <button 
+            <button
               className="text-left hover:text-primary transition"
               onClick={() => navigate("/my-orders")}
             >
               My Orders
             </button>
 
-            <button 
+            <button
               className="text-left text-red-600 hover:text-red-700 transition"
               onClick={() => setUser(null)}
             >
@@ -235,7 +240,7 @@ const Navbar = () => {
             </button>
           </>
         ) : (
-          <button 
+          <button
             onClick={() => setShowUserLogin(true)}
             className="mt-3 px-6 py-2 bg-primary rounded-full text-white shadow-md"
           >
