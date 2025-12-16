@@ -155,7 +155,7 @@ const Cart = () => {
             Place Order
           </button>
         </div>
-      </div>) : null};
+      </div>) : null}
     </>
   )
 };
