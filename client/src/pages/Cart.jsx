@@ -36,6 +36,8 @@ const Cart = () => {
     }
   }, [products, cartItems]);
 
+  const placeOrder = () => {}
+
   return (
     <>
       {products.length > 0 && cartItems ? (<div className="flex flex-col md:flex-row py-16 max-w-6xl w-full px-6 mx-auto">
@@ -143,7 +145,7 @@ const Cart = () => {
             </div>
             <p className="text-sm font-medium uppercase mt-6">Payment Method</p>
 
-            <select className="w-full border border-gray-300 bg-white px-3 py-2 mt-2 outline-none">
+            <select className="w-full border border-gray-300 bg-white px-3 py-2 mt-2 outline-none" onClick={(e)=> setPaymentMethod(e.target.value)}>
               <option value="COD">Cash On Delivery</option>
               <option value="Online">Online Payment</option>
             </select>
@@ -153,21 +155,21 @@ const Cart = () => {
 
           <div className="text-gray-500 mt-4 space-y-2">
             <p className="flex justify-between">
-              <span>Price</span><span>$20</span>
+              <span>Price</span><span>${totalCartAmount()}</span>
             </p>
             <p className="flex justify-between">
               <span>Shipping Fee</span><span className="text-green-600">Free</span>
             </p>
             <p className="flex justify-between">
-              <span>Tax (2%)</span><span>$20</span>
+              <span>Tax (2%)</span><span>${(totalCartAmount() * 2) / 100}</span>
             </p>
             <p className="flex justify-between text-lg font-medium mt-3">
-              <span>Total Amount:</span><span>$20</span>
+              <span>Total Amount:</span><span>${totalCartAmount() + (totalCartAmount() * 2) / 100}</span>
             </p>
           </div>
 
-          <button className="w-full py-3 mt-6 cursor-pointer bg-indigo-500 text-white font-medium hover:bg-indigo-600 transition">
-            Place Order
+          <button className="w-full py-3 mt-6 cursor-pointer bg-indigo-500 text-white font-medium hover:bg-indigo-600 transition" onClick={placeOrder}>
+            {paymentOption === "COD" ? "Place Order" : "Proceed to Checkout"}
           </button>
         </div>
       </div>) : null}
