@@ -83,8 +83,9 @@ const Auth = () => {
         {/* Heading */}
         <h2 className="text-3xl font-extrabold text-center">
           <span className="text-indigo-600">
+            User
+          </span>{" "}
             {state === "login" ? "Welcome Back" : "Create Account"}
-          </span>
         </h2>
 
         {/* Name Only in Register */}
