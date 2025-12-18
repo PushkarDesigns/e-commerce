@@ -1,7 +1,7 @@
 import { useContext } from "react";
 import { AppContext } from "../../context/AppContext";
 import { assets } from "../../assets/assets";
-import { Link, NavLink } from "react-router-dom";
+import { Link, NavLink, Outlet } from "react-router-dom";
 
 const SellerLayout = () => {
   const { setIsSeller, navigate } = useContext(AppContext);
@@ -27,13 +27,16 @@ const SellerLayout = () => {
           }}>Logout</button>
         </div>
       </div>
-      <div className="md:w-64 w-16 border-r h-[550px] text-base border-gray-300 pt-4 flex flex-col transition-all duration-300">
-        {sidebarLinks.map((item) => (
+      <div className="flex">
+        <div className="md:w-64 w-16 border-r h-[550px] text-base border-gray-300 pt-4 flex flex-col transition-all duration-300">
+          {sidebarLinks.map((item) => (
           <NavLink key={item.name} to={item.path} end={item.path === "/seller"} className={({ isActive }) => `flex items-center gap-3 py-3 px-4 hover:bg-gray-100 ${ isActive ? "bg-gray-100 border-r-4 border-primary" : "" }`}>
             <img src={item.icon} alt={item.name} className="w-7 h-7" />
             <p className="md:block hidden">{item.name}</p>
           </NavLink>
         ))}
+        </div>
+        <Outlet />
       </div>
     </>
   );
