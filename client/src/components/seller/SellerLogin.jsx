@@ -9,11 +9,12 @@ const SellerLogin = () => {
         if(isSeller) {
             navigate('/seller');
         }
-    },[isSeller]);
+    }, [isSeller]);
 
-    const submitHandler = (e) => {
+    const submitHandler = async (e) => {
         e.preventDefault();
         console.log("email:", email, "password:", password);
+        setIsSeller(true);
     };
 
     return !isSeller && (

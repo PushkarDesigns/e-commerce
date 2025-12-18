@@ -19,16 +19,12 @@ import ProductList from "./pages/seller/ProductList";
 import Orders from "./pages/seller/Orders";
 
 const App = () => {
-  const { setIsSeller, showUserLogin } = useContext(AppContext);
   const isSellerPath = useLocation().pathname.includes('seller');
+  const { setIsSeller, showUserLogin, isSeller } = useContext(AppContext);
   return (
     <div className="text-default min-h-screen">
-      {
-        isSellerPath ? null : <Navbar />
-      }
-      {
-        showUserLogin ? <Auth /> : null
-      }
+      {isSellerPath ? null : <Navbar />}
+      {showUserLogin ? <Auth /> : null}
       <Toaster />
       <div className="px-6 md:px-16 lg:px-24 xl:px-32">
         <Routes>
