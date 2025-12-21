@@ -4,6 +4,7 @@ import cookieParser from "cookie-parser";
 import dotenv from "dotenv";
 dotenv.config();
 import { connectDB } from "./config/connectDB.js";
+import userRoutes from "./routes/user.routes.js"
 
 // connectDB();
 
@@ -19,6 +20,8 @@ app.use(cookieParser());
 app.get('/',(req, res) => {
     res.send("hello");
 });
+
+app.use("/api/user", userRoutes);
 
 const PORT = process.env.PORT || 4000;
 
