@@ -1,6 +1,6 @@
-import User from '../models/user.model.js';
-import bcrypt from 'bcryptjs';
-import jwt from 'jsonwebtoken';
+import User from "../models/user.model.js";
+import bcrypt from "bcryptjs";
+import jwt from "jsonwebtoken";
 
 // register user : /api/user/register
 
@@ -20,7 +20,28 @@ export const registerUser = async (req, res) => {
     }
     const hashedPassword = await bcrypt.hash(password, 10);
     // You might want to save the user here, e.g., await newUser.save();
-    
+    const user = await User.create({
+      name,
+      email,
+      password: hashedPassword,
+    });
+    const token = jwt.sign({ id: user._id }, process.env.JWT_SECRET, {
+      expiresIn: "7d",
+    });
+    res.cookie("token", token, {
+      httpOnly: true,
+      secure: process.env.NODE_ENV === "production", // Use secure cookies in production
+      sameSite: process.env.NODE_ENV === "production" ? "none" : "strict", // Helps prevent CSRF attacks
+      maxAge: 7 * 24 * 60 * 60 * 1000, //7 days
+    });
+    res.json({
+      message: "User registered successfully",
+      success: true,
+      user: {
+        name: user.name,
+        email: user.email,
+      },
+    });
   } catch (error) {
     console.log(error);
     res.status(500).json({ message: "Internal server error" });
