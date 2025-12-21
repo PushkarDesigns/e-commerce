@@ -3,6 +3,9 @@ import cors from "cors";
 import cookieParser from "cookie-parser";
 import dotenv from "dotenv";
 dotenv.config();
+import { connectDB } from "./config/connectDB.js";
+
+// connectDB();
 
 const app = express();
 const allowedOrigins = ["http://localhost:5173"];
