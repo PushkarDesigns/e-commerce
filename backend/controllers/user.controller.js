@@ -31,7 +31,7 @@ export const registerUser = async (req, res) => {
     res.cookie("token", token, {
       httpOnly: true,
       secure: process.env.NODE_ENV === "production", // Use secure cookies in production
-      sameSite: process.env.NODE_ENV === "production" ? "none" : "strict", // Helps prevent CSRF attacks
+      sameSite: process.env.NODE_ENV === "production" ? "none" : "Strict", // Helps prevent CSRF attacks
       maxAge: 7 * 24 * 60 * 60 * 1000, //7 days
     });
     res.json({
@@ -58,7 +58,7 @@ export const loginUser = async (req, res) => {
     }
 
     // login user : /api/user/login
-    const user = await user.findOne({ email });
+    const user = await User.findOne({ email });
     if (!user) {
       return res
         .status(400)
@@ -87,6 +87,21 @@ export const loginUser = async (req, res) => {
         email: user.email,
       },
     });
+  } catch (error) {
+    console.log(error);
+    res.status(500).json({ message: "Internal server error" });
+  }
+};
+
+// logout user: /api/user/logout
+export const logoutUser = async (req, res) => {
+  try {
+    res.clearCookie("token", {
+      httpOnly: true,
+      secure: process.env.NODE_ENV === "production",
+      sameSite: process.env.NODE_ENV === "production" ? "none" : "Strict",
+    });
+    res.json({ message: "User logged out successfully", success: true });
   } catch (error) {
     console.log(error);
     res.status(500).json({ message: "Internal server error" });
