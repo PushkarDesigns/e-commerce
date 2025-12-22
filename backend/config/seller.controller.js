@@ -1,0 +1,31 @@
+import jwt from "jsonwebtoken";
+
+// seller login: /api/seller/login
+export const sellerLogin = async (req, res) => {
+  try {
+    const { email, password } = req.body;
+    if (
+      email === process.env.SELLER_EMAIL &&
+      password === process.env.SELLER_PASSWORD
+    ) {
+      const token = jwt.sign({ email }, process.env.JWT_SECRET, {
+        expiresIn: "7d",
+      });
+      res.cookie("sellerToken", token),
+        {
+          httpOnly: true,
+          secure: process.env.NODE_ENV === "production",
+          // Use secure cookies in production
+          sameSite: process.env.NODE_ENV === "production" ? "none" : "Strict",
+          // Helps prevent CSRF attacks
+          maxAge: 7 * 24 * 60 * 60 * 1000,
+          // 7 days
+        };
+
+      res.status(200).json({ message: "Login successful", success: true });
+    }
+  } catch (error) {
+    console.error("Error in sellerLogin:", error);
+    res.status(500).json({ message: "Internal server error" });
+  }
+};
