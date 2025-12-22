@@ -47,3 +47,48 @@ export const registerUser = async (req, res) => {
     res.status(500).json({ message: "Internal server error" });
   }
 };
+
+export const loginUser = async (req, res) => {
+  try {
+    const { email, password } = req.body;
+    if (!email || !password) {
+      return res
+        .status(400)
+        .json({ message: "All fields are required", success: false });
+    }
+
+    // login user : /api/user/login
+    const user = await user.findOne({ email });
+    if (!user) {
+      return res
+        .status(400)
+        .json({ message: "Invalid email or password", success: false });
+    }
+    const isMatch = await bcrypt.compare(password, user.password);
+    if (!isMatch) {
+      return res
+        .status(400)
+        .json({ message: "Invalid email or password", success: false });
+    }
+    const token = jwt.sign({ id: user._id }, process.env.JWT_SECRET, {
+      expiresIn: "7d",
+    });
+    res.cookie("token", token, {
+      httpOnly: true,
+      secure: process.env.NODE_ENV === "production", // Use secure cookies in production
+      sameSite: process.env.NODE_ENV === "production" ? "none" : "Strict", // Helps prevent CSRF attacks
+      maxAge: 7 * 24 * 60 * 60 * 1000, // 7 days
+    });
+    res.json({
+      message: "User logged successfully",
+      success: true,
+      user: {
+        name: user.name,
+        email: user.email,
+      },
+    });
+  } catch (error) {
+    console.log(error);
+    res.status(500).json({ message: "Internal server error" });
+  }
+};
