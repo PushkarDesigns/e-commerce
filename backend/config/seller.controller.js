@@ -44,3 +44,15 @@ export const sellerLogout = async (req, res) => {
     res.status(500).json({ message: "Internal server error" });
   }
 };
+
+// check auth seller : /api/seller/is-auth
+export const isAuthSeller = (req, res) => {
+try {
+res.status(200).json({
+success: true,
+});
+} catch (error) {
+console.error("Error in isAuthSeller:", error);
+res.status(500).json({ message: "Internal server error" });
+}
+};
