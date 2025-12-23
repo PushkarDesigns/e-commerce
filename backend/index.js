@@ -3,11 +3,13 @@ import cors from "cors";
 import cookieParser from "cookie-parser";
 import dotenv from "dotenv";
 dotenv.config();
-import { connectDB } from "./config/connectDB.js";
 import userRoutes from "./routes/user.routes.js"
 import sellerRoutes from './routes/seller.routes.js'
+import { connectDB } from "./config/connectDB.js";
+import { connectCLoudinary } from "./config/cloudinary.js";
 
 // connectDB();
+connectCLoudinary();
 
 const app = express();
 const allowedOrigins = ["http://localhost:5173"];
