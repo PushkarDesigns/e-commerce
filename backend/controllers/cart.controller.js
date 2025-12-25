@@ -7,7 +7,7 @@ export const updateCart = async (req, res) => {
     const { cartItems } = req.body;
     const updatedUser = await User.findByIdAndUpdate(
       userId,
-      { cartData: cartItems },
+      { cartItems: cartItems },
       { new: true }
     );
     if (!updatedUser) {

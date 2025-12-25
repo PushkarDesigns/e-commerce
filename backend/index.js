@@ -10,7 +10,7 @@ import { connectCLoudinary } from "./config/cloudinary.js";
 import productRoutes from './routes/product.routes.js'
 import cartRoutes from './routes/cart.routes.js'
 
-// connectDB();
+connectDB();
 connectCLoudinary();
 
 const app = express();
@@ -28,7 +28,7 @@ app.get('/',(req, res) => {
 
 app.use("/api/user", userRoutes);
 app.use("/api/seller", sellerRoutes);
-app.use("/api/product", productRoutes);
+app.use("/api/product", productRoutes); 
 app.use("/api/cart", cartRoutes);
 
 const PORT = process.env.PORT || 4000;
