@@ -9,7 +9,8 @@ import { connectDB } from "./config/connectDB.js";
 import { connectCLoudinary } from "./config/cloudinary.js";
 import productRoutes from './routes/product.routes.js'
 import cartRoutes from './routes/cart.routes.js'
-import OrderRoutes from "./models/order.model.js";
+import orderRoutes from "./models/order.model.js";
+import addressRoutes from "./models/address.model.js";
 
 
 connectDB();
@@ -32,7 +33,8 @@ app.use("/api/user", userRoutes);
 app.use("/api/seller", sellerRoutes);
 app.use("/api/product", productRoutes); 
 app.use("/api/cart", cartRoutes);
-app.use("/api/order", OrderRoutes);
+app.use("/api/order", orderRoutes);
+app.use("/api/address", addressRoutes);
 
 
 const PORT = process.env.PORT || 4000;
