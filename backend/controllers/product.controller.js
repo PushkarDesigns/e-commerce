@@ -1,20 +1,35 @@
 import Product from "../models/product.model.js";
-import { v2 as cloudinary } from "cloudinary";
+// import { v2 as cloudinary } from "cloudinary";
 
-// add product : /api/product/add
+// add product : /api/product/add-product
 export const addProduct = async (req, res) => {
   try {
     const { name, description, price, offerPrice, category } = req.body;
-    const images = req.files;
+    const image = req.files?.map((file) => file.filename);
+    // const images = req.files;
 
-    let imageUrl = await Promise.all(
-      images.map(async (item) => {
-        let result = await cloudinary.uploader.upload(item.path, {
-          resource_type: "image",
-        });
-        return result.secure_url;
-      })
-    );
+    // let imageUrl = await Promise.all(
+    //   images.map(async (item) => {
+    //     let result = await cloudinary.uploader.upload(item.path, {
+    //       resource_type: "image",
+    //     });
+    //     return result.secure_url;
+    //   })
+    // );
+    if (
+      !name ||
+      !price ||
+      !offerPrice ||
+      !description ||
+      !category ||
+      !image ||
+      image.length === 0
+    ) {
+      return res.status(400).json({
+        success: false,
+        message: "All fields including images are required",
+      });
+    }
     await Product.create({
       name,
       description,
@@ -32,7 +47,6 @@ export const addProduct = async (req, res) => {
 };
 
 //get products : /api/product/get
-
 export const getProducts = async (req, res) => {
   try {
     const products = await Product.find({}).sort({ createdAt: -1 });
@@ -65,7 +79,7 @@ export const changeStock = async (req, res) => {
     const product = await Product.findByIdAndUpdate(
       id,
       { inStock: stock },
-      { new: true, }
+      { new: true }
     );
     if (!product) {
       return res.status(404).json({
@@ -75,7 +89,8 @@ export const changeStock = async (req, res) => {
     }
     res.status(200).json({
       product,
-      success: true, message: "Stock updated successfully"
+      success: true,
+      message: "Stock updated successfully",
     });
   } catch (error) {
     res.status(500).json({

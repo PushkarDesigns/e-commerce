@@ -1,7 +1,10 @@
 import { useState } from "react";
 import { assets, categories } from "../../assets/assets";
+import { useContext } from "react";
+import { AppContext } from "../../context/AppContext";
 
 const AddProduct = () => {
+  const { axios } = useContext(AppContext)
   const [files, setFiles] = useState([]);
   const [name, setName] = useState('');
   const [price, setPrice] = useState('');
@@ -10,8 +13,22 @@ const AddProduct = () => {
   const [offerPrice, setOfferPrice] = useState('');
 
   const handleSubmit = async (e) => {
-    e.preventDefault();
+    try {
+      e.preventDefault();
+      const formData = new FormData();
+      formData.append("name", name);
+      formData.append("description", description);
+      formData.append("price", price);
+      formData.append("offerPrice", offerPrice);
+      formData.append("category", category);
+      for (let i = 0; i < files.length; i++) {
+        formData.append("image", files[i]);
+      }
+    } catch (error) {
+      // Handle error
+    }
   };
+
 
   return (
     <>
@@ -27,7 +44,7 @@ const AddProduct = () => {
                     updatedFiles[index] = e.target.files[0];
                     setFiles(updatedFiles);
                   }} />
-                  <img className="max-w-24 cursor-pointer" src={files[index]? URL.createObjectURL(files[index]) : assets.upload_area } alt="uploadArea" width={100} height={100} />
+                  <img className="max-w-24 cursor-pointer" src={files[index] ? URL.createObjectURL(files[index]) : assets.upload_area} alt="uploadArea" width={100} height={100} />
                 </label>
               ))}
             </div>
@@ -45,10 +62,10 @@ const AddProduct = () => {
             <select id="category" className="outline-none md:py-2.5 py-2 px-3 rounded border border-gray-500/40" onChange={(e) => setCategory(e.target.value)}>
               <option value="">Select Category</option>
               {categories.map((category, index) => (
-              <option key={index} value={category.path}>
-                {category.path}
-              </option>
-            ))}
+                <option key={index} value={category.path}>
+                  {category.path}
+                </option>
+              ))}
             </select>
           </div>
           <div className="flex items-center gap-5 flex-wrap">
