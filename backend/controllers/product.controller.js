@@ -36,7 +36,7 @@ export const addProduct = async (req, res) => {
       price,
       offerPrice,
       category,
-      image: imageUrl,
+      image: image,
     });
     res
       .status(201)
