@@ -75,10 +75,10 @@ export const getProductById = async (req, res) => {
 //  change stock :/api/product/stock
 export const changeStock = async (req, res) => {
   try {
-    const { id, stock } = req.body;
+    const { id, inStock } = req.body;
     const product = await Product.findByIdAndUpdate(
       id,
-      { inStock: stock },
+      { inStock: inStock },
       { new: true }
     );
     if (!product) {

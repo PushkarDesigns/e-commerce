@@ -19,7 +19,7 @@ const ProductCard = ({ product }) => {
                     <div className="w-full h-48 md:h-56 flex items-center justify-center bg-gray-50">
                         <img
                             className="max-h-full max-w-full object-contain transition-transform duration-300 group-hover:scale-105"
-                            src={product.image[0]}
+                            src={`http://localhost:3000/images/${product.image[0]}`}
                             alt={product.name}
                         />
                     </div>

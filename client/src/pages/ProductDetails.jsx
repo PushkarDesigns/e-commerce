@@ -120,12 +120,12 @@ const ProductDetails = () => {
                         {product.image?.map((image, index) => (
                             <div
                                 key={index}
-                                onClick={() => setThumbnail(image)}
+                                onClick={() => setThumbnail(`http://localhost:3000/images/${image}`)}
                                 className={`border rounded-lg overflow-hidden cursor-pointer transition transform hover:scale-105 ${
                                     thumbnail === image ? 'border-indigo-500' : 'border-gray-300'
                                 }`}
                             >
-                                <img src={image} alt={`Thumbnail ${index + 1}`} className="w-20 h-20 object-cover"/>
+                                <img src={`http://localhost:3000/images/${product.image[0]}`} alt={`Thumbnail ${index + 1}`} className="w-20 h-20 object-cover"/>
                             </div>
                         ))}
                     </div>
@@ -133,7 +133,7 @@ const ProductDetails = () => {
                     <div className="border rounded-lg overflow-hidden shadow-lg w-[400px] h-[400px] md:w-[500px] md:h-[500px] flex items-center justify-center bg-white">
                         {thumbnail && (
                             <img
-                                src={thumbnail}
+                                src={`http://localhost:3000/images/${product.image[0]}`}
                                 alt="Selected product"
                                 className="w-full h-full object-cover rounded-lg"
                             />
