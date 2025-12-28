@@ -59,7 +59,7 @@ const Cart = () => {
                   navigate(`product/${product.category}/${product._id}`);
                   scrollTo(0, 0);
                 }}>
-                  <img className="max-w-full h-full object-cover" src={product.image[0]} alt={product.name} />
+                  <img className="max-w-full h-full object-cover" src={`http://localhost:3000/images/${product.image[0]}`} alt={product.name} />
                 </div>
                 <div>
                   <p className="hidden md:block font-semibold">{product.name}</p>

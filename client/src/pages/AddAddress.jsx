@@ -9,7 +9,7 @@ const AddAddress = () => {
     street: "",
     city: "",
     state: "",
-    zip: "",
+    zipCode: "",
     country: "",
     phone: "",
   });

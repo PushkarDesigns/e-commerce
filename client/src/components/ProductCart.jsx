@@ -58,7 +58,7 @@ const ProductCard = ({ product }) => {
 
                             {/* Add / Counter */}
                             <div onClick={(e) => e.stopPropagation()}>
-                                {!cartItems[product._id] ? (
+                                {!cartItems?.[product._id] ? (
                                     <button
                                         onClick={() => addToCart(product._id)}
                                         className="bg-indigo-100 hover:bg-indigo-200 text-indigo-600 border border-indigo-300 
