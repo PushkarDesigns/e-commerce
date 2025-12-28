@@ -56,18 +56,38 @@
 
 import { React, useContext, useState } from "react";
 import { AppContext } from "../context/AppContext";
+import toast from "react-hot-toast";
 
 const Auth = () => {
   const [state, setState] = useState("login");
   const [name, setName] = useState("");
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
-  const { setShowUserLogin, setUser } = useContext(AppContext);
+  const { setShowUserLogin, setUser, axios, navigate } = useContext(AppContext);
 
-  const submitHandler = (e) => {
-    e.preventDefault();
-    console.log("name:", name, "email:", email, "password:", password);
+  const submitHandler = async (e) => {
+    try {
+      e.preventDefault();
+      console.log("name:", name, "email:", email, "password:", password);
+      const { data } = await axios.post(`/api/user/${state}`, {
+        name,
+        email,
+        password,
+      });
+      console.log("data", data)
+      if (data.success) {
+        toast.success(data.message);
+        navigate("/");
+        setUser(data.user);
+        setShowUserLogin(false);
+      } else {
+        toast.error(data.message);
+      }
+    } catch (error) {
+      toast.error(error.message)
+    }
   };
+
 
   return (
     <div
@@ -85,7 +105,7 @@ const Auth = () => {
           <span className="text-indigo-600">
             User
           </span>{" "}
-            {state === "login" ? "Welcome Back" : "Create Account"}
+          {state === "login" ? "Welcome Back" : "Create Account"}
         </h2>
 
         {/* Name Only in Register */}
