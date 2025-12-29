@@ -1,6 +1,7 @@
 import { useContext, useEffect, useState } from "react";
 import { AppContext } from "../context/AppContext";
-import { dummyAddress } from "../assets/assets";
+import toast from "react-hot-toast";
+// import { dummyAddress } from "../assets/assets";
 
 const Cart = () => {
   const {
@@ -11,13 +12,19 @@ const Cart = () => {
     cartItems,
     removeFromCart,
     updateCartItem,
+    axios,
+    user,
+    setCartItems,
   } = useContext(AppContext);
 
   // state to store products available in cart
   const [cartArray, setCartArray] = useState([]);
-  const [address, setAddress] = useState(dummyAddress);
+  // state to store products available in cart
+  const [address, setAddress] = useState([]);
   const [showAddress, setShowAddress] = useState(false);
-  const [selectedAddress, setSelectedAddress] = useState(dummyAddress[0]);
+  // state for selected address
+  const [selectedAddress, setSelectedAddress] = useState(null);
+  // state for payment option
   const [paymentOption, setPaymentOption] = useState("COD");
 
   const getCart = () => {
@@ -30,13 +37,63 @@ const Cart = () => {
     setCartArray(tempArray);
   };
 
+  const getAddress = async () => {
+    try {
+      const { data } = await axios.get("/api/address/get");
+      if (data.success) {
+        setAddress(data.addresses);
+        if (data.addresses.length > 0) {
+          setSelectedAddress(data.addresses[0]);
+        }
+      } else {
+        toast.error(data.message);
+      }
+    } catch (error) {
+      toast.error(error.message);
+    }
+  };
+
+  useEffect(() => {
+    if (user) {
+      getAddress();
+    }
+  }, [user]);
+
   useEffect(() => {
     if (products.length > 0 && cartItems) {
       getCart();
     }
   }, [products, cartItems]);
 
-  const placeOrder = () => {}
+  const placeOrder = async () => {
+    try {
+      if (!selectedAddress) {
+        return toast.error("Please select an address");
+      }
+
+      // place order with cod
+      if (paymentOption === "COD") {
+        const { data } = await axios.post("/api/order/cod", {
+          items: cartArray.map((item) => ({
+            product: item._id,
+            quantity: item.quantity,
+          })),
+          address: selectedAddress._id,
+        });
+
+        if (data.success) {
+          toast.success(data.message);
+          setCartItems({});
+          navigate("/my-orders")
+        } else{
+          toast.error(data.message);
+        }
+      }
+    } catch (error) { 
+      toast.error(error.message)
+    }
+  };
+
 
   return (
     <>
@@ -126,9 +183,9 @@ const Cart = () => {
                 <div className="absolute top-12 py-1 bg-white border border-gray-300 text-sm w-full">
                   {address.map((address, index) => (
                     <p key={index} onClick={() => {
-                        setSelectedAddress(address);
-                        setShowAddress(false);
-                      }}className="text-gray-500 p-2 hover:bg-gray-100"
+                      setSelectedAddress(address);
+                      setShowAddress(false);
+                    }} className="text-gray-500 p-2 hover:bg-gray-100"
                     >
                       {address.street}, {address.city}, {address.state},{" "}
                       {address.country},
@@ -145,7 +202,7 @@ const Cart = () => {
             </div>
             <p className="text-sm font-medium uppercase mt-6">Payment Method</p>
 
-            <select className="w-full border border-gray-300 bg-white px-3 py-2 mt-2 outline-none" onClick={(e)=> setPaymentMethod(e.target.value)}>
+            <select className="w-full border border-gray-300 bg-white px-3 py-2 mt-2 outline-none" onClick={(e) => setPaymentOption(e.target.value)}>
               <option value="COD">Cash On Delivery</option>
               <option value="Online">Online Payment</option>
             </select>

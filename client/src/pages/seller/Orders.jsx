@@ -1,12 +1,29 @@
-import React, { useEffect, useState } from 'react'
+import React, { useContext, useEffect, useState } from 'react'
 import { assets, dummyOrders } from '../../assets/assets'
+import { AppContext } from '../../context/AppContext';
+import toast from 'react-hot-toast';
 
 const Orders = () => {
-  const [orders, setOrders] = useState([])
+  const [orders, setOrders] = useState([]);
+  const { axios } = useContext(AppContext);
+
+  // const fetchOrders = async () => {
+  //   setOrders(dummyOrders)
+  // }
 
   const fetchOrders = async () => {
-    setOrders(dummyOrders)
-  }
+    try {
+      const { data } = await axios.get("/api/order/seller");
+      console.log("data", data)
+      if (data.success) {
+        setOrders(data.orders);
+      } else {
+        toast.error(data.message);
+      }
+    } catch (error) {
+      toast.error(error.message);
+    }
+  };
 
   useEffect(() => {
     fetchOrders()
@@ -25,7 +42,7 @@ const Orders = () => {
           <div className="flex gap-5">
             <img
               className="w-12 h-12 object-cover opacity-60"
-              src={assets.box_icon}
+              src={`http://localhost:3000/images/${order.items[0].product.image[0]}`}
               alt="box icon"
             />
 
