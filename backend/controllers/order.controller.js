@@ -1,6 +1,6 @@
 import Order from "../models/order.model.js";
 import Product from "../models/product.model.js";
-
+import stripe from "stripe";
 
 // Place order COD: /api/order/cod
 export const placeOrderCOD = async (req, res) => {
@@ -41,29 +41,66 @@ export const placeOrderStripe = async (req, res) => {
   try {
     const userId = req.user;
     const { items, address } = req.body;
-    
+    const { origin } = req.headers;
     if (!items || !address) {
       return res
         .status(400)
         .json({ message: "Items and address are required", success: false });
     }
+    let productData = [];
     let amount = await items.reduce(async (acc, item) => {
       const product = await Product.findById(item.product);
+      productData.push({
+        name: product.name,
+        price: product.offerPrice,
+        quantity: item.quantity,
+      });
       return (await acc) + product.offerPrice * item.quantity;
     }, 0);
     amount += Math.floor((amount * 2) / 100);
     // create Order
-    await Order.create({
+    const order = await Order.create({
       userId,
       items,
       address,
       amount,
-      paymentType: "COD",
-      isPaid: false,
+      paymentType: "Online Mode",
+      isPaid: true,
     });
+
+    // stripe gateway initialize
+    const stripeInstance = new stripe(process.env.STRIPE_SECRET_KEY);
+
+    // create line item for stripe
+    const line_items = productData.map((item) => {
+      return {
+        price_data: {
+          currency: "usd",
+          product_data: {
+            name: item.name,
+          },
+          unit_amount: Math.floor(item.price * item.price * 0.02) * 100,
+        },
+        quantity: item.quantity,
+      };
+    });
+
+    // create session
+    const session = await stripeInstance.checkout.sessions.create({
+      line_items,
+      mode: "payment",
+      success_url: `${origin}/loader?next=/my-orders`,
+      cancel_url: `${origin}/cart`,
+      metadata: {
+        orderId: order._id.toString(),
+        userId,
+      },
+    });
+
     res.status(201).json({
       message: "Order placed successfully",
       success: true,
+      url: session.url,
     });
   } catch (error) {
     console.error("Error placing order:", error);
@@ -72,7 +109,6 @@ export const placeOrderStripe = async (req, res) => {
 };
 
 // order details for individual user :/api/order/user
-
 export const getUserOrders = async (req, res) => {
   try {
     const userId = req.user;
